@@ -1,17 +1,14 @@
 package me.vmorozov.cluster.calculation;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import me.vmorozov.cluster.data.ConformismTable;
 import me.vmorozov.cluster.data.ListOfRows;
 import me.vmorozov.cluster.data.Table;
+import me.vmorozov.cluster.data.TableRow;
 
-//TODO move to one object??
-public class ConformismClustering implements Clustering {
-	
+public class MinusClustering implements Clustering {
+
 	@Override
 	public ConformismTable compute(int[][] data, int availableValuesCount) {
 		ConformismTable table = new ConformismTable(data);
@@ -20,15 +17,18 @@ public class ConformismClustering implements Clustering {
 		table.transposeAndResetRemovedRows();
 		computeForRows(table, availableValuesCount);
 		table.transposeAndResetRemovedRows();
-		
+		//TODO find clusters i guess
 		return table;
 	}
 
-	//TODO naming
 	protected void computeForRows(ConformismTable table, int availableValuesCount) {
-		table.setFrequenciesByColumns(computeFrequenciesByColumns(table, availableValuesCount));
-		table.setSumsForRows(calculateRowSumms(table));
-		sortByRowSumms(table);
+		while (table.getRowCount() != 0) {
+			table.setFrequenciesByColumns(computeFrequenciesByColumns(table, availableValuesCount));
+			table.setSumsForRows(calculateRowSums(table));
+			table.removeRowWithLowestSum();
+		}
+		table.resetRemovedRows();
+		sortByRowRemovalOrder(table);
 	}
 	
 	
@@ -55,12 +55,12 @@ public class ConformismClustering implements Clustering {
 	}
 	
 	/**
-	 * calculates summs. does frequency substitution step internally
+	 * calculates sums. does frequency substitution step internally
 	 * @param initialTable
 	 * @param frequencies
-	 * @return row for index, summ for value
+	 * @return row for index, sum for value
 	 */
-	protected int[] calculateRowSumms(ConformismTable table) {
+	protected int[] calculateRowSums(ConformismTable table) {
 		int[] summs = new int[table.getRowCount()];
 		
 		for (int row = 0; row < table.getRowCount(); row++) {
@@ -73,16 +73,26 @@ public class ConformismClustering implements Clustering {
 		return summs;
 	}
 	
-	protected void sortByRowSumms(ConformismTable table) {
+	protected void sortByRowRemovalOrder(ConformismTable table) {
 		ListOfRows listOfRows = table.asListOfRows();
+		int tempId = listOfRows.get(5).getRowId();
+		
+		System.out.println("----");
+		for (TableRow row : listOfRows) {
+			System.out.println(row.getRemovalOrder());
+		}
+		
 		listOfRows.sort( (row1, row2) -> { 
-			if (row1.getSum() < row2.getSum()) {
+			if (row1.getRemovalOrder() < row2.getRemovalOrder()) {
 				return 1;
-			} else if (row1.getSum() > row2.getSum()) {
+			} else if (row1.getRemovalOrder() > row2.getRemovalOrder()) {
 				return -1;
 			}
 			return 0;
 		});
+		
+		boolean temp = tempId == listOfRows.get(5).getRowId();
+		if(temp){}
 	}
+
 }
- 

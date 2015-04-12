@@ -5,6 +5,7 @@ import java.util.Arrays;
 import me.vmorozov.cluster.calculation.Clustering;
 import me.vmorozov.cluster.calculation.ConformismClustering;
 import me.vmorozov.cluster.calculation.ImpactClustering;
+import me.vmorozov.cluster.calculation.MinusClustering;
 import me.vmorozov.cluster.data.ConformismTable;
 import me.vmorozov.cluster.data.Table;
 
@@ -22,7 +23,7 @@ public class Main {
 		
 		int[][] table = FileUtil.readTable(path);
 		
-		Clustering clustering = new ImpactClustering();
+		Clustering clustering = new MinusClustering();
 		Table result = clustering.compute(table, 10);
 		
 		String output = "Result:\n";

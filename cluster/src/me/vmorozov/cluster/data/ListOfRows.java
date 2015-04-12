@@ -3,12 +3,12 @@ package me.vmorozov.cluster.data;
 import java.util.AbstractList;
 
 /**
- * List of rows is highly tied to a table it wraps and mirrors changes there.
- * Use for sorting.
+ * List of rows. Highly tied to a table it wraps. Mirrors changes there.
+ * Use for sorting. By sum or removal order for example.
  * @author Vova
  *
  */
-public class ListOfRows extends AbstractList<RowWithSum>{
+public class ListOfRows extends AbstractList<TableRow>{
 
 	private ConformismTable table;
 	
@@ -17,11 +17,12 @@ public class ListOfRows extends AbstractList<RowWithSum>{
 	}
 	
 	@Override
-	public RowWithSum get(int index) {
-		RowWithSum row = new RowWithSum(
+	public TableRow get(int index) {
+		TableRow row = new TableRow(
 				table.getRowSum(index), 
 				table.getRowAsArray(index),
-				table.getRowId(index));
+				table.getRowId(index),
+				table.getRemovalOrderForRow(index));
 		return row;
 	}
 
@@ -31,8 +32,8 @@ public class ListOfRows extends AbstractList<RowWithSum>{
 	}
 	
 	@Override
-	public RowWithSum set(int index, RowWithSum element) {
-		RowWithSum previous = get(index);
+	public TableRow set(int index, TableRow element) {
+		TableRow previous = get(index);
 		table.setRowWithSum(element, index);
 		return previous;
 	}

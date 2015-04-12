@@ -13,9 +13,9 @@ public class ImpactClustering extends ConformismClustering {
 		ConformismTable table = new ConformismTable(data);
 
 		computeForRows(table, availableValuesCount);
-		table.transpose();
+		table.transposeAndResetRemovedRows();
 		computeForRows(table, availableValuesCount);
-		table.transpose();
+		table.transposeAndResetRemovedRows();
 		
 		return table;
 	}
