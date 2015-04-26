@@ -19,8 +19,15 @@ public class FileUtil {
 	    String lineSeparator = System.getProperty("line.separator");
 
 	    try {
-	        while(scanner.hasNextLine()) {        
-	            fileContents.append(scanner.nextLine() + lineSeparator);
+	    	boolean firstLine = true;
+	        while(scanner.hasNextLine()) {  
+	        	if (firstLine) {
+	        		fileContents.append(scanner.nextLine());
+	        	} else {
+	        		fileContents.append(lineSeparator + scanner.nextLine());
+	        	}
+	            
+	            firstLine = false;
 	        }
 	        return fileContents.toString();
 	    } finally {
@@ -28,9 +35,9 @@ public class FileUtil {
 	    }
 	}
 	
-	public static void write(String text) {
+	public static void write(String text, String filePath) {
 		try {
-			Files.write(Paths.get("D:\\output2.txt"), text.getBytes(), StandardOpenOption.CREATE);
+			Files.write(Paths.get(filePath), text.getBytes(), StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

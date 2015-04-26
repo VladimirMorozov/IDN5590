@@ -11,7 +11,7 @@ public class LettersTest {
 	@Test
 	public void getMapTest() {
 		Letters letters = new Letters();
-		LinkedHashMap<String, Integer> result = letters.getMap("MERI METS MIISU MERSU RIST RISU", Letters.ESTONIAN_ALPHABET, false);
+		LinkedHashMap<String, Integer> result = letters.getMap("MERI METS MIISU MERSU RIST RISU", Letters.ESTONIAN_ALPHABET, false, true);
 		System.out.println(result.toString());
 	}
 
