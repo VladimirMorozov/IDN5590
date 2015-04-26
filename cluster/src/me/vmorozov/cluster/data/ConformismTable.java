@@ -53,16 +53,30 @@ public class ConformismTable extends Table {
 	
 	public void removeRowWithLowestSum() {
 		int lowestSum = Integer.MAX_VALUE;
-		int indexWithLowesSum = 0;
+		int indexWithLowestSum = 0;
 		ListOfRows listOfRows = this.asListOfRows();
 		for (int i = 0; i < listOfRows.size(); i++) {
 			int currentSum = listOfRows.get(i).getSum();
 			if (currentSum < lowestSum) {
 				lowestSum = currentSum;
-				indexWithLowesSum = i;
+				indexWithLowestSum = i;
 			}
 		}
-		removeRow(indexWithLowesSum);
+		removeRow(indexWithLowestSum);
+	}
+	
+	public void removeRowWithHighestSum() {
+		int highestSum = Integer.MIN_VALUE;
+		int indexWithHighestSum = 0;
+		ListOfRows listOfRows = this.asListOfRows();
+		for (int i = 0; i < listOfRows.size(); i++) {
+			int currentSum = listOfRows.get(i).getSum();
+			if (currentSum > highestSum) {
+				highestSum = currentSum;
+				indexWithHighestSum = i;
+			}
+		}
+		removeRow(indexWithHighestSum);
 	}
 	
 	public int getRowSum(int row) {

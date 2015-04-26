@@ -61,7 +61,7 @@ public class Table {
 	 * Swaps rows with columns. "Removed" rows become reset (table grows to former size)
 	 */
 	public void transposeAndResetRemovedRows() {
-		initNotRemovedRowIndexes();
+		initNotRemovedRowIndexes();//TODO
 		int[][] inverted = new int[getColumnCount()][getRowCount()];
 		for (int row = 0; row < getRowCount(); row++) {
 			for (int col = 0; col < getColumnCount(); col++) {
@@ -100,11 +100,13 @@ public class Table {
 	}
 	
 	public void removeRow(int rowIndex) {
-		boolean elementExisted = notRemovedRowIndexes.remove(Integer.valueOf(getRealRowIndex(rowIndex)));
+		System.out.println("row removed: " + getRealRowIndex(rowIndex));
+		int realRowIndex = getRealRowIndex(rowIndex);
+		boolean elementExisted = notRemovedRowIndexes.remove(Integer.valueOf(realRowIndex));
 		if (!elementExisted) {
 			throw new RuntimeException("removed row does not exist");
 		}
-		rowRemovalOrder[rowIndex] = currentRemovalOrder;
+		rowRemovalOrder[realRowIndex] = currentRemovalOrder;
 		currentRemovalOrder++;
 	}
 	

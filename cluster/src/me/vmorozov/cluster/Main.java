@@ -6,6 +6,7 @@ import me.vmorozov.cluster.calculation.Clustering;
 import me.vmorozov.cluster.calculation.ConformismClustering;
 import me.vmorozov.cluster.calculation.ImpactClustering;
 import me.vmorozov.cluster.calculation.MinusClustering;
+import me.vmorozov.cluster.calculation.PlusMinusClustering;
 import me.vmorozov.cluster.data.ConformismTable;
 import me.vmorozov.cluster.data.Table;
 

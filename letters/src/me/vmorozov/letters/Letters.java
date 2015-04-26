@@ -31,6 +31,7 @@ public class Letters {
 		String alphabetFilePath = arguments.get("-a");
 		String sortArg = arguments.getOrDefault("-s", "parse");
 		String caseSensitiveArg = arguments.getOrDefault("-c", "false");
+		boolean fromWordBegginingOnly = Boolean.parseBoolean(arguments.getOrDefault("-b", "false"));
 		boolean sort;
 		switch (sortArg) {
 		case "parse":
@@ -50,7 +51,7 @@ public class Letters {
 			alphabet = ESTONIAN_ALPHABET;
 		} else {
 			alphabet = new ArrayList<Character>();
-			String alphabetFileText = FileUtil.readFile(alphabetFilePath);
+			String alphabetFileText = FileUtil.readFile(alphabetFilePath).toUpperCase();
 			for (Character letter : alphabetFileText.toCharArray()) {
 				alphabet.add(letter);
 			}
@@ -59,7 +60,7 @@ public class Letters {
 		String text = FileUtil.readFile(inputFilePath);
 		Letters letters = new Letters();
 		long startTime = System.currentTimeMillis();
-		LinkedHashMap<String, Integer> result = letters.getMap(text, alphabet, caseSensitive, sort);
+		LinkedHashMap<String, Integer> result = letters.getMap(text, alphabet, caseSensitive, sort, fromWordBegginingOnly);
 		System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + " ms");
 		//System.out.println(result);
 		
@@ -75,8 +76,16 @@ public class Letters {
 		return new File("").getAbsolutePath()+"\\lettersOutput.txt";
 	}
 	
+	/**
+	 * @param text text to parse
+	 * @param alphabet alphabet to use (all other chars are delimiters)
+	 * @param caseSensitive 
+	 * @param sort should it be sorted alphanumeric? in parse order otherwise
+	 * @param fromWordBegginingOnly should character groups be found only in relation to beggining of the words
+	 * @return [chargroup, timesEncountered]
+	 */
 	public LinkedHashMap<String, Integer> getMap(
-			String text, List<Character> alphabet, boolean caseSensitive, boolean sort) {
+			String text, List<Character> alphabet, boolean caseSensitive, boolean sort, boolean fromWordBegginingOnly) {
 		
 		//TODO in relation to word beginning only
 		//TODO decide on sorting
@@ -91,6 +100,7 @@ public class Letters {
 			for (int endIndex = beginIndex + 1; endIndex <= text.length(); endIndex++) {
 				Character endChar = text.charAt(endIndex - 1);
 				if (!alphabet.contains(Character.toUpperCase(endChar))) {
+					beginIndex = endIndex - 1;
 					break;
 				}
 				String subword = text.substring(beginIndex, endIndex);
