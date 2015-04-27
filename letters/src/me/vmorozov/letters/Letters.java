@@ -60,7 +60,7 @@ public class Letters {
 		String text = FileUtil.readFile(inputFilePath);
 		Letters letters = new Letters();
 		long startTime = System.currentTimeMillis();
-		LinkedHashMap<String, Integer> result = letters.getMap(text, alphabet, caseSensitive, sort, fromWordBegginingOnly);
+		LinkedHashMap<String, Integer> result = letters.getCharacterGroupMap(text, alphabet, caseSensitive, sort, fromWordBegginingOnly);
 		System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + " ms");
 		//System.out.println(result);
 		
@@ -77,6 +77,7 @@ public class Letters {
 	}
 	
 	/**
+	 * Finds character groups in text
 	 * @param text text to parse
 	 * @param alphabet alphabet to use (all other chars are delimiters)
 	 * @param caseSensitive 
@@ -84,48 +85,58 @@ public class Letters {
 	 * @param fromWordBegginingOnly should character groups be found only in relation to beggining of the words
 	 * @return [chargroup, timesEncountered]
 	 */
-	public LinkedHashMap<String, Integer> getMap(
+	public LinkedHashMap<String, Integer> getCharacterGroupMap(
 			String text, List<Character> alphabet, boolean caseSensitive, boolean sort, boolean fromWordBegginingOnly) {
-		
-		//TODO in relation to word beginning only
-		//TODO decide on sorting
 
+		//linked hash map is used to keep order
 		LinkedHashMap<String, Integer> result = new LinkedHashMap<String, Integer>();
 		
+		//walk through all characters taking beginIndex as character group start
 		for (int beginIndex = 0; beginIndex < text.length(); beginIndex++) {
 			Character startChar = text.charAt(beginIndex);
 			if (!alphabet.contains(Character.toUpperCase(startChar))) {
 				continue;
 			}
+			//for each character walk through all next characters and form groups with them
 			for (int endIndex = beginIndex + 1; endIndex <= text.length(); endIndex++) {
 				Character endChar = text.charAt(endIndex - 1);
 				if (!alphabet.contains(Character.toUpperCase(endChar))) {
-					beginIndex = endIndex - 1;
+					//if we form groups only relative to beginning of the word
+					//when word end is reached we move beginIndex to its place 
+					//(-1 is because ++ will be done when cycle ends)
+					if (fromWordBegginingOnly) { 
+						beginIndex = endIndex - 1;
+					}
 					break;
 				}
-				String subword = text.substring(beginIndex, endIndex);
+				//get and add characterGroup to map
+				String characterGroup = text.substring(beginIndex, endIndex);
 				if (!caseSensitive) {
-					subword = subword.toLowerCase();
+					characterGroup = characterGroup.toLowerCase();
 				}
-				incrementWordCountInMap(subword, result);
+				incrementWordCountInMap(characterGroup, result);
 			}
 		}
 		
 		//sorting
 		if (sort) {
-			result = result.entrySet().stream()
-				    .sorted(Map.Entry.comparingByKey())
-				    .collect(Collectors.toMap(
-				    		entry -> entry.getKey(), 
-				    		entry -> entry.getValue(), 
-				    		(v1, v2) -> { throw new RuntimeException("key collision"); }, 
-				    		LinkedHashMap::new));
+			result = sortMap(result);
 		}
-		
-		
 		
 		return result;
 		
+	}
+
+	private LinkedHashMap<String, Integer> sortMap(LinkedHashMap<String, Integer> result) {
+		
+		result = result.entrySet().stream()
+			    .sorted(Map.Entry.comparingByKey())
+			    .collect(Collectors.toMap(
+			    		entry -> entry.getKey(), 
+			    		entry -> entry.getValue(), 
+			    		(v1, v2) -> { throw new RuntimeException("key collision"); }, 
+			    		LinkedHashMap::new));
+		return result;
 	}
 	
 	private void incrementWordCountInMap(String word, Map<String, Integer> wordMap) {
