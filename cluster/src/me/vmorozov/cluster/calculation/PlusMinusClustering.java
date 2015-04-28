@@ -87,11 +87,7 @@ public abstract class PlusMinusClustering implements Clustering {
 	 */
 	protected abstract void sort(ConformismTable table);
 	
-	/**
-	 * Finds classes or clusters start row indexes in table. sets them.
-	 * @param table
-	 */
-	protected void findClasses(PlusMinusTable table) {
+	public void findClasses(PlusMinusTable table) {
 		int previousSum = 0;
 		ListOfRows listOfRows = table.asListOfRows();
 		for (int rowIndex = 0; rowIndex < listOfRows.size(); rowIndex++) {
