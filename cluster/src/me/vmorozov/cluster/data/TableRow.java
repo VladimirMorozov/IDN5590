@@ -1,5 +1,10 @@
 package me.vmorozov.cluster.data;
 
+/**
+ * Holds information about table row. Is not connected to table (changes in here are ignored in table)
+ * @author Vova
+ *
+ */
 public class TableRow {
 	
 	private int sum;
@@ -38,6 +43,4 @@ public class TableRow {
 	public void setRemovalOrder(int removalOrder) {
 		this.removalOrder = removalOrder;
 	}
-
-	
 }

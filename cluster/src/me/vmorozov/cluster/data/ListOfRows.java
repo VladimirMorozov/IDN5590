@@ -4,7 +4,7 @@ import java.util.AbstractList;
 
 /**
  * List of rows. Highly tied to a table it wraps. Mirrors changes there.
- * Use for sorting. By sum or removal order for example.
+ * Use for sorting. By sum or removal order for example. Changes in row contents are not mirrored!
  * @author Vova
  *
  */
@@ -34,7 +34,7 @@ public class ListOfRows extends AbstractList<TableRow>{
 	@Override
 	public TableRow set(int index, TableRow element) {
 		TableRow previous = get(index);
-		table.setRowWithSum(element, index);
+		table.setFromRow(element, index);
 		return previous;
 	}
 

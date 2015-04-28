@@ -31,7 +31,7 @@ public class Letters {
 		String alphabetFilePath = arguments.get("-a");
 		String sortArg = arguments.getOrDefault("-s", "parse");
 		String caseSensitiveArg = arguments.getOrDefault("-c", "false");
-		boolean fromWordBegginingOnly = Boolean.parseBoolean(arguments.getOrDefault("-b", "false"));
+		boolean fromWordBeginningOnly = Boolean.parseBoolean(arguments.getOrDefault("-b", "false"));
 		boolean sort;
 		switch (sortArg) {
 		case "parse":
@@ -60,7 +60,7 @@ public class Letters {
 		String text = FileUtil.readFile(inputFilePath);
 		Letters letters = new Letters();
 		long startTime = System.currentTimeMillis();
-		LinkedHashMap<String, Integer> result = letters.getCharacterGroupMap(text, alphabet, caseSensitive, sort, fromWordBegginingOnly);
+		LinkedHashMap<String, Integer> result = letters.getCharacterGroupMap(text, alphabet, caseSensitive, sort, fromWordBeginningOnly);
 		System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + " ms");
 		//System.out.println(result);
 		
@@ -82,11 +82,11 @@ public class Letters {
 	 * @param alphabet alphabet to use (all other chars are delimiters)
 	 * @param caseSensitive 
 	 * @param sort should it be sorted alphanumeric? in parse order otherwise
-	 * @param fromWordBegginingOnly should character groups be found only in relation to beggining of the words
+	 * @param fromWordBeginningOnly should character groups be found only in relation to beginning of the words
 	 * @return [chargroup, timesEncountered]
 	 */
 	public LinkedHashMap<String, Integer> getCharacterGroupMap(
-			String text, List<Character> alphabet, boolean caseSensitive, boolean sort, boolean fromWordBegginingOnly) {
+			String text, List<Character> alphabet, boolean caseSensitive, boolean sort, boolean fromWordBeginningOnly) {
 
 		//linked hash map is used to keep order
 		LinkedHashMap<String, Integer> result = new LinkedHashMap<String, Integer>();
@@ -104,7 +104,7 @@ public class Letters {
 					//if we form groups only relative to beginning of the word
 					//when word end is reached we move beginIndex to its place 
 					//(-1 is because ++ will be done when cycle ends)
-					if (fromWordBegginingOnly) { 
+					if (fromWordBeginningOnly) { 
 						beginIndex = endIndex - 1;
 					}
 					break;
@@ -127,6 +127,9 @@ public class Letters {
 		
 	}
 
+	/**
+	 * Alphanumeric sort of letter group map
+	 */
 	private LinkedHashMap<String, Integer> sortMap(LinkedHashMap<String, Integer> result) {
 		
 		result = result.entrySet().stream()
@@ -139,6 +142,9 @@ public class Letters {
 		return result;
 	}
 	
+	/**
+	 * Increments value in map by key if it exists, puts 1 as value otherwise
+	 */
 	private void incrementWordCountInMap(String word, Map<String, Integer> wordMap) {
 		if (wordMap.get(word) == null) {
 			wordMap.put(word, 1);

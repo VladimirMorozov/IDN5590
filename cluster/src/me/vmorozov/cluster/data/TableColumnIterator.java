@@ -2,11 +2,16 @@ package me.vmorozov.cluster.data;
 
 import java.util.Iterator;
 
+/**
+ * Iterates through row values on a fixed column
+ * @author Vova
+ *
+ */
 public class TableColumnIterator implements Iterator<Integer> {
 
-	private Table table;
-	private int rowIndex;
-	private final int columnIndex;
+	protected Table table;
+	protected int rowIndex;
+	protected final int columnIndex;
 	
 	public TableColumnIterator(Table table, int columnIndex) {
 		this.table = table;
@@ -15,7 +20,7 @@ public class TableColumnIterator implements Iterator<Integer> {
 	
 	@Override
 	public boolean hasNext() {
-		if (rowIndex + 1 <= table.getRowCount()) {
+		if (rowIndex  < table.getRowCount()) {
 			return true;
 		}
 		return false;

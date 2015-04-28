@@ -2,8 +2,14 @@ package me.vmorozov.cluster.data;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
-//TODO split to separate objects, reason: some of table interface should not be seen by computing
+/**
+ * Adds frequencies and sums to Table. Also some convenience methods.
+ * Despite the name is used in Impact(mõju) clustering too
+ * @author Vova
+ *
+ */
 public class ConformismTable extends Table {
 
 	/** [value, frequency] */
@@ -41,14 +47,24 @@ public class ConformismTable extends Table {
 		return frequenciesByColumns.get(column, value);
 	}
 	
+	/**
+	 * Get table as list of rows, convenient for sorting or iterating. 
+	 * changes in list are mirrored to table (!NB changes in row contents are not)
+	 * @return
+	 */
 	public ListOfRows asListOfRows() {
 		return new ListOfRows(this);
 	}
 	
-	public void setRowWithSum(TableRow rowWithSumm, int row) {
-		tableData[row] = rowWithSumm.getRow();
-		sumsForRows[row] = rowWithSumm.getSum();
-		rowIds[row] = rowWithSumm.getRowId();
+	/**
+	 * Set table data from row
+	 * @param tableRow
+	 * @param rowIndex
+	 */
+	public void setFromRow(TableRow tableRow, int rowIndex) {
+		tableData[rowIndex] = tableRow.getRow();
+		sumsForRows[rowIndex] = tableRow.getSum();
+		rowIds[rowIndex] = tableRow.getRowId();
 	}
 	
 	public void removeRowWithLowestSum() {
@@ -125,16 +141,5 @@ public class ConformismTable extends Table {
 				+ "summsForRows(sorted with table)=\n" + Arrays.toString(sumsForRows) + "\n"
 				+ "summsForColumns(sorted with table)=\n" + Arrays.toString(sumsForColumns);
 	}
-	
-	private int compareBySum(TableRow row1, TableRow row2) {
-		if (row1.getSum() > row2.getSum()) {
-			return 1;
-		} else if (row1.getSum() < row2.getSum()) {
-			return -1;
-		}
-		return 0;
-	}
-	
-	
 
 }

@@ -9,13 +9,19 @@ import me.vmorozov.cluster.data.ConformismTable;
 import me.vmorozov.cluster.data.ListOfRows;
 import me.vmorozov.cluster.data.Table;
 
-//TODO move to one object??
+/**
+ * Uses "Konformismiskaala" 
+ * @author Vova
+ *
+ */
 public class ConformismClustering implements Clustering {
 	
 	@Override
 	public ConformismTable compute(int[][] data, int availableValuesCount) {
 		ConformismTable table = new ConformismTable(data);
 
+		//compute for rows, then transpose to compute for columns, 
+		//then transpose again to get initial table form
 		computeForRows(table, availableValuesCount);
 		table.transposeAndResetRemovedRows();
 		computeForRows(table, availableValuesCount);
@@ -24,7 +30,11 @@ public class ConformismClustering implements Clustering {
 		return table;
 	}
 
-	//TODO naming
+	/**
+	 * computes all required info and puts into table for rows only
+	 * @param table
+	 * @param availableValuesCount
+	 */
 	protected void computeForRows(ConformismTable table, int availableValuesCount) {
 		table.setFrequenciesByColumns(computeFrequenciesByColumns(table, availableValuesCount));
 		table.setSumsForRows(calculateRowSumms(table));
@@ -34,6 +44,7 @@ public class ConformismClustering implements Clustering {
 	
 	
 	/**
+	 * Computes value frequencies in columns
 	 * @param table
 	 * @param availableValuesCount
 	 * @return frequencies as int[columnIndex][value]
@@ -42,10 +53,12 @@ public class ConformismClustering implements Clustering {
 		int colCount = table.getColumnCount();
 		int[][] result = new int[colCount][availableValuesCount];
 		
+		//outer iteration through columns
 		for (int columnIndex = 0; columnIndex < colCount; columnIndex++) {
 			Iterator<Integer> rowValuesInColumn = table.getColumnIterator(columnIndex);
 			//value as index, frequency as value
 			int[] valueFrequencies = new int[availableValuesCount];
+			//inner iteration through values in column
 			while (rowValuesInColumn.hasNext()) {
 				valueFrequencies[rowValuesInColumn.next()]++;
 			}
@@ -73,6 +86,10 @@ public class ConformismClustering implements Clustering {
 		return summs;
 	}
 	
+	/**
+	 * Sorts rows in table by their sums
+	 * @param table
+	 */
 	protected void sortByRowSumms(ConformismTable table) {
 		ListOfRows listOfRows = table.asListOfRows();
 		listOfRows.sort( (row1, row2) -> { 

@@ -8,6 +8,15 @@ import java.util.stream.Stream;
 
 import me.vmorozov.cluster.Util;
 
+/**
+ * Used for holding table consisting of ints. Has row removing feature. 
+ * Rows can be removed from this table and then restored. 
+ * While rows are removed table behaves as if they do not exist.
+ * !NB Methods/variables containing "Real" word mean that table is manipulated as if there are no removed rows.
+ * In addition to data this class also creates and stores ids of columns and rows.
+ * @author Vova
+ *
+ */
 public class Table {
 	
 	/**
@@ -16,7 +25,7 @@ public class Table {
 	protected int[][] tableData;
 	protected int[] rowIds;
 	protected int[] columnIds;
-	/** [rowIndex] -> underlying index in tableData	 */
+	/** [rowIndex] -> underlying index in tableData. maps rowIndex to realRowIndex	 */
 	protected List<Integer> notRemovedRowIndexes;
 	
 	/** [rowIndex] */
@@ -50,6 +59,9 @@ public class Table {
 		}
 	}
 
+	/**
+	 * creates/resets removed rows indexes
+	 */
 	private void initNotRemovedRowIndexes() {
 		notRemovedRowIndexes = new ArrayList<Integer>();
 		for (int i = 0; i < getRealRowCount(); i++) {
@@ -100,7 +112,6 @@ public class Table {
 	}
 	
 	public void removeRow(int rowIndex) {
-		System.out.println("row removed: " + getRealRowIndex(rowIndex));
 		int realRowIndex = getRealRowIndex(rowIndex);
 		boolean elementExisted = notRemovedRowIndexes.remove(Integer.valueOf(realRowIndex));
 		if (!elementExisted) {
@@ -136,12 +147,22 @@ public class Table {
 		return tableData[0].length;
 	}
 	
+	/**
+	 * Get iterator for column values in specified row
+	 */
 	public Iterator<Integer> getRowIterator(int rowIndex) {
 		return new TableRowIterator(this, notRemovedRowIndexes.get(rowIndex));
 	}
 	
 	public Iterator<Integer> getColumnIterator(int columnIndex) {
 		return new TableColumnIterator(this, columnIndex);
+	}
+	
+	/**
+	 * Get iterator which iterates through all rows and has isRemoved variable in next() value
+	 */
+	public Iterator<ValueAndIsRemoved> getPlusColumnIterator(int columnIndex) {
+		return new PlusColumnIterator(this, columnIndex);
 	}
 	
 	public void setTableData(int[][] tableData) {
@@ -158,6 +179,17 @@ public class Table {
 				+ "\nrowIds: " + Arrays.toString(rowIds)
 				+ "\ncolumnIds: " + Arrays.toString(columnIds);
 				
+	}
+
+	/**
+	 * Get element ignoring removed rows
+	 */
+	public Integer getReal(int rowIndex, int columnIndex) {
+		return tableData[rowIndex][columnIndex];
+	}
+	
+	public boolean isRowRemoved(int realRowIndex) {
+		return !notRemovedRowIndexes.contains(Integer.valueOf(realRowIndex));
 	}
 	
 	

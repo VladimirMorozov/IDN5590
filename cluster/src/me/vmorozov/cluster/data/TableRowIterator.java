@@ -2,6 +2,11 @@ package me.vmorozov.cluster.data;
 
 import java.util.Iterator;
 
+/**
+ * Iterates through column values on a fixed row
+ * @author Vova
+ *
+ */
 public class TableRowIterator implements Iterator<Integer> {
 
 	private Table table;

@@ -32,8 +32,8 @@ public class FileUtil {
 		.toArray();
 	}
 	
-	public static void write(String text) {
-		try (PrintWriter out = new PrintWriter("D:\\output.txt")){
+	public static void write(String text, String filepath) {
+		try (PrintWriter out = new PrintWriter(filepath)){
 			out.write(text);
 			//Files.write(Paths.get("D:\\output.txt"), text.getBytes(), StandardOpenOption.CREATE);
 		} catch (IOException e) {
