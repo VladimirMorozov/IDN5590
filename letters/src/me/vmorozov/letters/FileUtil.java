@@ -3,6 +3,7 @@ package me.vmorozov.letters;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -15,7 +16,7 @@ public class FileUtil {
 
 	    File file = new File(pathname);
 	    StringBuilder fileContents = new StringBuilder((int)file.length());
-	    Scanner scanner = new Scanner(file);
+	    Scanner scanner = new Scanner(file, "UTF-8");
 	    String lineSeparator = System.getProperty("line.separator");
 
 	    try {
@@ -37,7 +38,7 @@ public class FileUtil {
 	
 	public static void write(String text, String filePath) {
 		try {
-			Files.write(Paths.get(filePath), text.getBytes(), StandardOpenOption.CREATE);
+			Files.write(Paths.get(filePath), text.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

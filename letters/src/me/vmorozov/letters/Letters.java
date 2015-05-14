@@ -91,6 +91,23 @@ public class Letters {
 		//linked hash map is used to keep order
 		LinkedHashMap<String, Integer> result = new LinkedHashMap<String, Integer>();
 		
+		
+		goThroughTextAndFillMap(text, alphabet, caseSensitive,
+				fromWordBeginningOnly, result);
+		
+		//sorting
+		if (sort) {
+			result = sortMap(result);
+		}
+		
+		return result;
+		
+	}
+
+	private void goThroughTextAndFillMap(String text, List<Character> alphabet,
+			boolean caseSensitive, boolean fromWordBeginningOnly,
+			LinkedHashMap<String, Integer> result) {
+		
 		//walk through all characters taking beginIndex as character group start
 		for (int beginIndex = 0; beginIndex < text.length(); beginIndex++) {
 			Character startChar = text.charAt(beginIndex);
@@ -115,16 +132,14 @@ public class Letters {
 					characterGroup = characterGroup.toLowerCase();
 				}
 				incrementWordCountInMap(characterGroup, result);
+				
+				//when last letter of last word is reached we should end iteration
+				//if we count from beggining only
+				if (fromWordBeginningOnly && endIndex == text.length()) {
+					return ;
+				}
 			}
 		}
-		
-		//sorting
-		if (sort) {
-			result = sortMap(result);
-		}
-		
-		return result;
-		
 	}
 
 	/**
