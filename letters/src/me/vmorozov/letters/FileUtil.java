@@ -13,7 +13,9 @@ import java.util.stream.Stream;
 public class FileUtil {
 	
 	public static String readFile(String pathname) throws IOException {
-
+		System.out.println("reading file: " + pathname);
+		
+		
 	    File file = new File(pathname);
 	    StringBuilder fileContents = new StringBuilder((int)file.length());
 	    Scanner scanner = new Scanner(file, "UTF-8");
@@ -24,6 +26,7 @@ public class FileUtil {
 	        while(scanner.hasNextLine()) {  
 	        	if (firstLine) {
 	        		fileContents.append(scanner.nextLine());
+	        		System.out.println("first line: " + fileContents);
 	        	} else {
 	        		fileContents.append(lineSeparator + scanner.nextLine());
 	        	}
@@ -37,8 +40,9 @@ public class FileUtil {
 	}
 	
 	public static void write(String text, String filePath) {
+		System.out.println("writing output of length: " + text.length() + " to file: " + filePath);
 		try {
-			Files.write(Paths.get(filePath), text.getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(Paths.get(filePath), text.getBytes("UTF-8"), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

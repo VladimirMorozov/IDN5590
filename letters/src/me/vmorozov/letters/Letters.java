@@ -88,6 +88,8 @@ public class Letters {
 	public LinkedHashMap<String, Integer> getCharacterGroupMap(
 			String text, List<Character> alphabet, boolean caseSensitive, boolean sort, boolean fromWordBeginningOnly) {
 
+		System.out.println("text length: " + text.length());
+		System.out.println("alphabet: " + alphabet.toString());
 		//linked hash map is used to keep order
 		LinkedHashMap<String, Integer> result = new LinkedHashMap<String, Integer>();
 		
@@ -100,8 +102,9 @@ public class Letters {
 			result = sortMap(result);
 		}
 		
-		return result;
+		System.out.println("letter groups found: " + result.size());
 		
+		return result;
 	}
 
 	private void goThroughTextAndFillMap(String text, List<Character> alphabet,
