@@ -112,9 +112,6 @@ public class Letters {
 			if (!stringLetter.equals(lowerCased)) {
 				rule += ", "+lowerCased + " ";
 			}
-			if (alphabet.indexOf(letter) != alphabet.size() - 1) {
-
-			}
 		}
 		return rule;
 	}
