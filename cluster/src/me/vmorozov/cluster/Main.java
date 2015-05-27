@@ -30,7 +30,11 @@ public class Main {
 		Table result = clustering.compute(table, 10);
 		System.out.println("Time taken: " + (System.currentTimeMillis() - startTime) + " ms");
 		
-		String output = "Result:\n";
+		String output = "";
+		if (method.equals("minus")) {
+			output += "NOTE: not default sorting! Ordered by removal order descending  (rows, which were removed first are in the end. same for columns)";
+		}
+		output += "Result:\n";
 		output += result.toString();
 		
 		FileUtil.write(output, outputFilepath);
