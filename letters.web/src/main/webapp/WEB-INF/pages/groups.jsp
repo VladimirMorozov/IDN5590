@@ -43,7 +43,7 @@ View
 
     <div>
         <label>
-            custom alphabet
+            custom alphabet (case-insensitive)
             <input name="customAlphabet" type="text">
         </label>
     </div>

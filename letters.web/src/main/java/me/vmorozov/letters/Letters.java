@@ -2,6 +2,9 @@ package me.vmorozov.letters;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.Collator;
+import java.text.ParseException;
+import java.text.RuleBasedCollator;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
@@ -91,12 +94,29 @@ public class Letters {
 		
 		//sorting
 		if (sort) {
-			result = sortMap(result);
+				result = sortMap(result, alphabet);
 		}
 		
 		System.out.println("letter groups found: " + result.size());
 		
 		return result;
+	}
+
+	private String createCollatorRuleFromAlphabet(List<Character> alphabet) {
+		String rule = "";
+		for (Character letter : alphabet) {
+			rule += "< ";
+			String stringLetter = letter.toString();
+			String lowerCased = stringLetter.toLowerCase();
+			rule += stringLetter+" ";
+			if (!stringLetter.equals(lowerCased)) {
+				rule += ", "+lowerCased + " ";
+			}
+			if (alphabet.indexOf(letter) != alphabet.size() - 1) {
+
+			}
+		}
+		return rule;
 	}
 
 	private void goThroughTextAndFillMap(String text, List<Character> alphabet,
@@ -140,10 +160,18 @@ public class Letters {
 	/**
 	 * Alphanumeric sort of letter group map
 	 */
-	private LinkedHashMap<String, Integer> sortMap(LinkedHashMap<String, Integer> result) {
-		
+	private LinkedHashMap<String, Integer> sortMap(LinkedHashMap<String, Integer> result, List<Character> alphabet) {
+
+		String collatorRule = createCollatorRuleFromAlphabet(alphabet);
+		Collator customAlphabetCollator;
+		try {
+			customAlphabetCollator = new RuleBasedCollator(collatorRule);
+		} catch (ParseException e) {
+			throw new RuntimeException("error in collator rule. rule: " + collatorRule, e);
+		}
+
 		result = result.entrySet().stream()
-			    .sorted(Entry.comparingByKey())
+			    .sorted(Entry.comparingByKey(customAlphabetCollator))
 			    .collect(Collectors.toMap(
 			    		entry -> entry.getKey(), 
 			    		entry -> entry.getValue(), 
