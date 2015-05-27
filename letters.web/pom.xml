@@ -7,6 +7,11 @@
   <version>1.0-SNAPSHOT</version>
   <name>letters.web Maven Webapp</name>
   <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
   <dependencies>
 
     <!--spring-->
@@ -35,15 +40,18 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
-      <version>3.0.1</version>
+      <version>3.1.0</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet.jsp.jstl</groupId>
-      <artifactId>jstl-api</artifactId>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
       <version>1.2</version>
     </dependency>
+
+
+
 
     <!--logging-->
     <dependency>
